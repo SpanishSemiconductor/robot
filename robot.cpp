@@ -1,6 +1,4 @@
-﻿// robot.cpp : Ten plik zawiera funkcję „main”. W nim rozpoczyna się i kończy wykonywanie programu.
-//
-#include <iostream>
+﻿#include <iostream>
 #include <ctime>
 #include <iomanip>
 const unsigned int MAPA_SZER = 40;
@@ -8,16 +6,18 @@ const unsigned int MAPA_WYS = 20;
 const unsigned int SEGMENT_SIZE = 5;
 using namespace std;
 
-void wpiszDoMapy(int n, int m, int (*tablicaSegmentow[6])[SEGMENT_SIZE], int mapa[MAPA_SZER][MAPA_WYS]) {
+void wpiszDoMapy(int n, int m, int (*tablicaSegmentow[6])[SEGMENT_SIZE], int mapa[MAPA_WYS][MAPA_SZER]) {
 	 int losowa = rand() % 6;
+	 
+
 	for (int i = 0; i < SEGMENT_SIZE; i++) {
 		for (int j = 0; j < SEGMENT_SIZE; j++) {
-			mapa[i + n][j + m] = (tablicaSegmentow[losowa])[i][j];
+			mapa[i+n][j+m] = tablicaSegmentow[losowa][i][j];
 		}
 	}
 
 }
-void printMapa(int mapa[MAPA_SZER][MAPA_WYS]) {
+void printMapa(int mapa[MAPA_WYS][MAPA_SZER]) {
 	for (int i = 0; i < MAPA_WYS; i++) {
 		for (int j = 0; j < MAPA_SZER; j++) {
 			cout << setw(3) << mapa[i][j];
@@ -28,7 +28,7 @@ void printMapa(int mapa[MAPA_SZER][MAPA_WYS]) {
 int main()
 {
 	srand(time(0));
-	int mapa[MAPA_SZER][MAPA_WYS] = {};
+	int mapa[MAPA_WYS][MAPA_SZER] = {};
 	int segmentA[SEGMENT_SIZE][SEGMENT_SIZE] = {
 		{0,0,1,0,0},
 		{0,1,1,0,0},
@@ -72,12 +72,12 @@ int main()
 		{0,0,1,0,0}
 	};
 	int (*tabSegmentow[6])[SEGMENT_SIZE] = { segmentA, segmentB,segmentC, segmentD,segmentE,segmentF };
-	for (int j = 0; j < 20; j += 5) {
-		for (int i = 0; i < 40; i += 5) {
-			wpiszDoMapy(j, i, tabSegmentow, mapa);
+	for (int j = 0; j < 20-1; j += 5) {
+		for (int i = 0; i < 40-1; i += 5) {
+			wpiszDoMapy(j,i, tabSegmentow, mapa);
 		}
 	}
+	
 	printMapa(mapa);
-
 }
 
