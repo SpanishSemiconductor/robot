@@ -30,10 +30,10 @@ void printMapa(int mapa[MAPA_WYS][MAPA_SZER]) {
 	}
 }
 void wypiszListeSasiadow(int x, int y, vertex* p, vertex** vertexArray) {
-	p = vertexArray[y * MAPA_WYS + x];
+	p = vertexArray[y * MAPA_SZER + x];
 	cout << "["<<x<<","<<y<<"]";
 	cout << " --> ";
-	if (vertexArray[y*MAPA_WYS+x] == nullptr) {
+	if (vertexArray[y*MAPA_SZER+x] == nullptr) {
 		cout << "Wierzcholek nie istnieje" << endl;
 	}
 	else if(p->next==nullptr){
@@ -44,7 +44,7 @@ void wypiszListeSasiadow(int x, int y, vertex* p, vertex** vertexArray) {
 
 		while (p->next != nullptr) {
 			//cout << "[" << p->value % MAPA_SZER << "," << (p->value - ((p->value) % MAPA_SZER))/MAPA_WYS<< "] ";
-			cout << p->value << " ";
+			cout << "[" << p->value % MAPA_SZER << ";" << (p->value - (p->value % MAPA_SZER))/MAPA_SZER << "] "; 
 			p = p->next;
 		}
 	}
@@ -111,6 +111,7 @@ int main()
 	vertex* p;
 	vertex** vertexArray = new vertex * [liczbaWierzcholkow];
 	bool* visited = new bool[liczbaWierzcholkow];
+	vertex** queue = new vertex * [liczbaWierzcholkow]; 
 
 	p = new vertex;
 
@@ -118,15 +119,15 @@ int main()
 		for (int j = 0; j < MAPA_SZER; j++) {
 
 			if (mapa[i][j] == 0) {
-				vertexArray[i * MAPA_WYS + j] = nullptr;
+				vertexArray[i * MAPA_SZER + j] = nullptr;
 				continue;
 			}
 			p = new vertex;
-			vertexArray[i * MAPA_WYS + j] = p;
+			vertexArray[i * MAPA_SZER + j] = p;
 			p->next = nullptr;
 			if (j > 0) { //sprawdz lewo 
 				if (mapa[i][j - 1] == 1) {
-					p->value = i * MAPA_WYS + j - 1;
+					p->value = i * MAPA_SZER + j - 1;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -134,7 +135,7 @@ int main()
 			if (i < MAPA_WYS - 1) { //sprawdz dol 
 				if (mapa[i + 1][j] == 1) {
 
-					p->value = (i + 1) * MAPA_WYS + j;
+					p->value = (i + 1) * MAPA_SZER + j;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -143,7 +144,7 @@ int main()
 			if (j < MAPA_SZER - 1) {//sprawdz prawo 
 				if (mapa[i][j + 1] == 1) {
 
-					p->value = i * MAPA_WYS + j + 1;
+					p->value = i * MAPA_SZER + j + 1;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -151,7 +152,7 @@ int main()
 			if (i > 0) { //sprawdz gore 
 				if (mapa[i - 1][j] == 1) {
 
-					p->value = (i - 1) * MAPA_WYS + j;
+					p->value = (i - 1) * MAPA_SZER + j;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -159,15 +160,22 @@ int main()
 			p->next = nullptr;
 		}
 	}
-	int x, y;
-	while (true) {
+	int xStart, yStart, xEnd, yEnd;
 
+	do {
+		xStart = rand() % MAPA_SZER;
+		yEnd = rand() % MAPA_WYS;
+		yStart = rand() % MAPA_WYS;
+		xEnd = rand() % MAPA_SZER;
+	} while (mapa[yStart][xStart] == 1 && mapa[yEnd][xEnd] == 1);
+	/*while (true) {
+		int x, y;
 	std::cin >> x>>y;
 	wypiszListeSasiadow(x, y, p, vertexArray);
 	char stop = 'c';
 	cin >> stop;
 	if (stop == 'b') break;
 
-	}
+	}*/
 }
 
