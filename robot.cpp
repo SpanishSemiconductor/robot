@@ -29,17 +29,21 @@ void printMapa(int mapa[MAPA_WYS][MAPA_SZER]) {
 		cout << endl;
 	}
 }
-void wypiszListeSasiadow(int dziesiatki, int jednosci, vertex* p, vertex** vertexArray) {
-	p = vertexArray[dziesiatki * 10 + jednosci];
-	cout << dziesiatki * 10 + jednosci;
+void wypiszListeSasiadow(int x, int y, vertex* p, vertex** vertexArray) {
+	p = vertexArray[y * MAPA_WYS + x];
+	cout << "["<<x<<","<<y<<"]";
 	cout << " --> ";
-	if (vertexArray[dziesiatki*10+jednosci] == nullptr) {
+	if (vertexArray[y*MAPA_WYS+x] == nullptr) {
+		cout << "Wierzcholek nie istnieje" << endl;
+	}
+	else if(p->next==nullptr){
 		cout << "Brak sasiadow" << endl;
+
 	}
 	else {
 
 		while (p->next != nullptr) {
-			cout << p->value << " ";
+			cout << "[" << p->value % MAPA_WYS << "," << (p->value - ((p->value) % MAPA_WYS))/MAPA_WYS<< "] ";
 			p = p->next;
 		}
 	}
@@ -91,14 +95,14 @@ int main()
 		{0,0,1,0,0}
 	};
 	int (*tabSegmentow[6])[SEGMENT_SIZE] = { segmentA, segmentB,segmentC, segmentD,segmentE,segmentF };
-	for (int j = 0; j < 20 - 1; j += 5) {
-		for (int i = 0; i < 40 - 1; i += 5) {
+	for (int j = 0; j < MAPA_WYS - 1; j += 5) {
+		for (int i = 0; i < MAPA_SZER - 1; i += 5) {
 			wpiszDoMapy(j, i, tabSegmentow, mapa);
 		}
 	}
 	int liczbaWierzcholkow = 0;
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < 40; j++)
+	for (int i = 0; i < MAPA_WYS; i++) {
+		for (int j = 0; j < MAPA_SZER; j++)
 			if (mapa[i][j] == 1) liczbaWierzcholkow++;
 	}
 
@@ -112,15 +116,15 @@ int main()
 		for (int j = 0; j < MAPA_SZER; j++) {
 
 			if (mapa[i][j] == 0) {
-				vertexArray[i * 10 + j] = nullptr;
+				vertexArray[i * MAPA_WYS + j] = nullptr;
 				continue;
 			}
 			p = new vertex;
-			vertexArray[i * 10 + j] = p;
+			vertexArray[i * MAPA_WYS + j] = p;
 			p->next = nullptr;
 			if (j > 0) { //sprawdz lewo 
 				if (mapa[i][j - 1] == 1) {
-					p->value = i * 10 + j - 1;
+					p->value = i * MAPA_WYS + j - 1;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -128,7 +132,7 @@ int main()
 			if (i < MAPA_WYS - 1) { //sprawdz dol 
 				if (mapa[i + 1][j] == 1) {
 
-					p->value = (i + 1) * 10 + j;
+					p->value = (i + 1) * MAPA_WYS + j;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -137,7 +141,7 @@ int main()
 			if (j < MAPA_SZER - 1) {//sprawdz prawo 
 				if (mapa[i][j + 1] == 1) {
 
-					p->value = i * 10 + j + 1;
+					p->value = i * MAPA_WYS + j + 1;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -145,7 +149,7 @@ int main()
 			if (i > 0) { //sprawdz gore 
 				if (mapa[i - 1][j] == 1) {
 
-					p->value = (i - 1) * 10 + j;
+					p->value = (i - 1) * MAPA_WYS + j;
 					p->next = new vertex;
 					p = p->next;
 				}
@@ -154,8 +158,15 @@ int main()
 		}
 	}
 	printMapa(mapa);
-	int dziesiatki, jednosci;
-	std::cin >> dziesiatki >> jednosci;
-	wypiszListeSasiadow(dziesiatki, jednosci, p, vertexArray);
+	int x, y;
+	while (true) {
+
+	std::cin >> x>>y;
+	wypiszListeSasiadow(x, y, p, vertexArray);
+	char stop = 'c';
+	cin >> stop;
+	if (stop == 'b') break;
+
+	}
 }
 
