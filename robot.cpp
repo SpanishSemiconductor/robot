@@ -43,7 +43,8 @@ void wypiszListeSasiadow(int x, int y, vertex* p, vertex** vertexArray) {
 	else {
 
 		while (p->next != nullptr) {
-			cout << "[" << p->value % MAPA_WYS << "," << (p->value - ((p->value) % MAPA_WYS))/MAPA_WYS<< "] ";
+			//cout << "[" << p->value % MAPA_SZER << "," << (p->value - ((p->value) % MAPA_SZER))/MAPA_WYS<< "] ";
+			cout << p->value << " ";
 			p = p->next;
 		}
 	}
@@ -105,6 +106,7 @@ int main()
 		for (int j = 0; j < MAPA_SZER; j++)
 			if (mapa[i][j] == 1) liczbaWierzcholkow++;
 	}
+	printMapa(mapa);
 
 	vertex* p;
 	vertex** vertexArray = new vertex * [liczbaWierzcholkow];
@@ -157,7 +159,6 @@ int main()
 			p->next = nullptr;
 		}
 	}
-	printMapa(mapa);
 	int x, y;
 	while (true) {
 
