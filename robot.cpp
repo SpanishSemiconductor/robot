@@ -5,11 +5,41 @@ const unsigned int MAPA_SZER = 40;
 const unsigned int MAPA_WYS = 20;
 const unsigned int SEGMENT_SIZE = 5;
 using namespace std;
-struct vertex {
+struct vertexStruct {
 	int value;
-	vertex* next;
+	vertexStruct* next;
 };
-
+struct queueStruct {
+	vertexStruct* front=nullptr; 
+	vertexStruct* rear=nullptr; 
+};
+bool isEmpty(queueStruct queue){
+	if (queue.front == nullptr && queue.rear == nullptr) return true;
+	else return false;
+	
+}
+void enqueue(queueStruct queue, vertexStruct* vertex) {
+		vertexStruct* temp;
+	if (isEmpty(queue)) {
+		temp->value = vertex->value; 
+		temp->next = nullptr;
+		queue.front = queue.rear = temp;
+	}
+	else {
+		temp->value = vertex->value;
+		temp->next= nullptr;
+		queue.rear->next = temp; 
+		queue.rear = temp;
+		
+	}
+	delete temp; 
+}
+void dequeue(queueStruct queue) {
+	vertexStruct* temp; 
+	temp = queue.front; 
+	queue.front = queue.front->next; 
+	delete temp; 
+}
 void wpiszDoMapy(int n, int m, int (*tablicaSegmentow[6])[SEGMENT_SIZE], int mapa[MAPA_WYS][MAPA_SZER]) {
 	int losowa = rand() % 6;
 
@@ -29,7 +59,7 @@ void printMapa(int mapa[MAPA_WYS][MAPA_SZER]) {
 		cout << endl;
 	}
 }
-void wypiszListeSasiadow(int x, int y, vertex* p, vertex** vertexArray) {
+void wypiszListeSasiadow(int x, int y, vertexStruct* p, vertexStruct** vertexArray) {
 	p = vertexArray[y * MAPA_SZER + x];
 	cout << "["<<x<<","<<y<<"]";
 	cout << " --> ";
@@ -108,12 +138,12 @@ int main()
 	}
 	printMapa(mapa);
 
-	vertex* p;
-	vertex** vertexArray = new vertex * [liczbaWierzcholkow];
+	vertexStruct* p;
+	vertexStruct** vertexArray = new vertexStruct * [liczbaWierzcholkow];
 	bool* visited = new bool[liczbaWierzcholkow];
-	vertex** queue = new vertex * [liczbaWierzcholkow]; 
+	vertexStruct** queue = new vertexStruct * [liczbaWierzcholkow]; 
 
-	p = new vertex;
+	p = new vertexStruct;
 
 	for (int i = 0; i < MAPA_WYS; i++) {
 		for (int j = 0; j < MAPA_SZER; j++) {
@@ -122,13 +152,13 @@ int main()
 				vertexArray[i * MAPA_SZER + j] = nullptr;
 				continue;
 			}
-			p = new vertex;
+			p = new vertexStruct;
 			vertexArray[i * MAPA_SZER + j] = p;
 			p->next = nullptr;
 			if (j > 0) { //sprawdz lewo 
 				if (mapa[i][j - 1] == 1) {
 					p->value = i * MAPA_SZER + j - 1;
-					p->next = new vertex;
+					p->next = new vertexStruct;
 					p = p->next;
 				}
 			}
@@ -136,7 +166,7 @@ int main()
 				if (mapa[i + 1][j] == 1) {
 
 					p->value = (i + 1) * MAPA_SZER + j;
-					p->next = new vertex;
+					p->next = new vertexStruct;
 					p = p->next;
 				}
 
@@ -145,7 +175,7 @@ int main()
 				if (mapa[i][j + 1] == 1) {
 
 					p->value = i * MAPA_SZER + j + 1;
-					p->next = new vertex;
+					p->next = new vertexStruct;
 					p = p->next;
 				}
 			}
@@ -153,7 +183,7 @@ int main()
 				if (mapa[i - 1][j] == 1) {
 
 					p->value = (i - 1) * MAPA_SZER + j;
-					p->next = new vertex;
+					p->next = new vertexStruct;
 					p = p->next;
 				}
 			}
