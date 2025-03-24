@@ -21,7 +21,7 @@ bool isEmpty(queueStruct* queue) {
 void enqueue(queueStruct* queue, vertexStruct* vertex) {
 	vertexStruct* temp = new vertexStruct;
 	temp->value = vertex->value;
- 	temp->next = nullptr;
+	temp->next = nullptr;
 	if (isEmpty(queue)) {
 		queue->front = temp;
 		queue->rear = temp;
@@ -87,29 +87,24 @@ void wypiszListeSasiadow(int x, int y, vertexStruct* p, vertexStruct** vertexArr
 		}
 	}
 }
-void bfs(vertexStruct** vertexArray, queueStruct* queue, bool* visited, int liczbaWierzcholkow, int xStart, int yStart, int xEnd, int yEnd) {
+int bfs(vertexStruct** vertexArray, queueStruct* queue, bool* visited, int liczbaWierzcholkow, int xStart, int yStart, int xEnd, int yEnd) {
 	int kroki = 0;
 	enqueue(queue, vertexArray[yStart * MAPA_SZER + xStart]);
-	int index1 = yStart * MAPA_SZER + xStart;
-	visited[index1] = true;
+	visited[yStart * MAPA_SZER + xStart] = true;
+	vertexStruct* p = vertexArray[yStart * MAPA_SZER + xStart];
 	while (!isEmpty(queue)) {
-		vertexStruct* p = queue->front;
-		int index = p->value;
+		p = vertexArray[queue->front->value]; 
 		dequeue(queue);
-		while (p->next != nullptr) {
-			if (p == vertexArray[yEnd * MAPA_SZER + xEnd]) {
-				cout << kroki << endl;
-				return;
-			}
-			else if (!(visited+index)) {
-				enqueue(queue, p->next);
+		if (visited[yEnd * MAPA_SZER + xEnd]) return kroki;
+		else if (!visited[p->value]) {
+			while (p->next != nullptr) {
+				enqueue(queue, vertexArray[p->value]);
 				visited[p->value] = true;
-				kroki++;
+				p = p->next;
 			}
-			else continue;
-
 		}
-
+		else if (visited[p->value]) continue;
+		kroki++;
 	}
 }
 int main()
@@ -173,7 +168,7 @@ int main()
 
 	vertexStruct* p;
 	vertexStruct** vertexArray = new vertexStruct * [liczbaWierzcholkow];
-	bool* visited = new bool[MAPA_WYS*MAPA_SZER];
+	bool* visited = new bool[MAPA_WYS * MAPA_SZER];
 	for (int i = 0; i < MAPA_WYS * MAPA_SZER; i++) {
 		visited[i] = false;
 	}
@@ -229,18 +224,18 @@ int main()
 	queueStruct* kolejka = new queueStruct;
 	kolejka->front = nullptr;
 	kolejka->rear = nullptr;
-	
+
+	xStart = rand() % MAPA_SZER;
+	yEnd = rand() % MAPA_WYS;
+	yStart = rand() % MAPA_WYS;
+	xEnd = rand() % MAPA_SZER;
+	while (true) {
 		xStart = rand() % MAPA_SZER;
 		yEnd = rand() % MAPA_WYS;
 		yStart = rand() % MAPA_WYS;
 		xEnd = rand() % MAPA_SZER;
-		while (true) {
-			xStart = rand() % MAPA_SZER;
-			yEnd = rand() % MAPA_WYS;
-			yStart = rand() % MAPA_WYS;
-			xEnd = rand() % MAPA_SZER;
-			if (mapa[yStart][xStart] == 1 && mapa[yEnd][xEnd] == 1) break;
-		}
+		if (mapa[yStart][xStart] == 1 && mapa[yEnd][xEnd] == 1) break;
+	}
 	//while (true) {
 	//	int x, y;
 	//std::cin >> x>>y;
@@ -260,13 +255,14 @@ int main()
 	cout << "Start: [" << xStart << ";" << yStart << "]" << endl;
 	cout << "Koniec: [" << xEnd << ";" << yEnd << "]" << endl;
 	cout << mapa[yStart][xStart] << endl;
-	//wypiszListeSasiadow(xStart, yStart, p, vertexArray);
-	//wypiszListeSasiadow(xEnd, yEnd, p, vertexArray);
+	wypiszListeSasiadow(xStart, yStart, p, vertexArray);
+	cout << endl;
+	wypiszListeSasiadow(xEnd, yEnd, p, vertexArray);
 	/*enqueue(kolejka, vertexArray[yStart * MAPA_SZER + xStart]);
 	enqueue(kolejka, vertexArray[yEnd * MAPA_SZER + xEnd]);
 	dequeue(kolejka);
 	printQueue(kolejka);*/
-	bfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd);
+	cout<<bfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd);
 
 }
 
