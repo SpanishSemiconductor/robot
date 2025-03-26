@@ -93,7 +93,7 @@ void wypiszListeSasiadow(int x, int y, vertexStruct** vertexArray) {
 		}
 	}
 }
-int bfs(vertexStruct** vertexArray, queueStruct* queue, bool* visited, int liczbaWierzcholkow, int xStart, int yStart, int xEnd, int yEnd) {
+void bfs(vertexStruct** vertexArray, queueStruct* queue, bool* visited, int liczbaWierzcholkow, int xStart, int yStart, int xEnd, int yEnd, int*dystans, int* rodzic) {
 	int kroki = 0;
 	int licznikZakolejkowanych = 0;
 	enqueue(queue, vertexArray[yStart * MAPA_SZER + xStart]);
@@ -101,23 +101,27 @@ int bfs(vertexStruct** vertexArray, queueStruct* queue, bool* visited, int liczb
 	*(visited + yStart * MAPA_SZER + xStart) = true;
 	vertexStruct* p = vertexArray[yStart * MAPA_SZER + xStart];
 	queue->rear->value = yStart * MAPA_SZER + xStart;
+	dystans[yStart * MAPA_SZER + xStart] = 0;
+	rodzic[yStart * MAPA_SZER + xStart] = -1;
+	
 	while (!isEmpty(queue)) {
 		p = vertexArray[queue->front->value];
+		int wartoscPrzodu = queue->front->value;
 		dequeue(queue);
-		if (*(visited + yEnd * MAPA_SZER + xEnd)) return kroki;
+		if (*(visited + yEnd * MAPA_SZER + xEnd)) return ;
 		while (p->next != nullptr) {
 			if (!*(visited + p->value)) {
+				rodzic[p->value] = wartoscPrzodu;
+				dystans[p->value] = dystans[wartoscPrzodu] + 1;
 				enqueue(queue, vertexArray[p->value]);
 				queue->rear->value = p->value;
 				*(visited + p->value) = true;
-				licznikZakolejkowanych++;
 			}
 			p = p->next;
 
 
 		}
 		//if (*(visited + p->value)) continue;
-		kroki += 1;
 	}
 }
 void znajdzDroge(vertexStruct** vertexArray, int* distance, bool* visited, int* parent, int xSTart, int yStart, int xEnd, int yEnd) {
@@ -135,7 +139,7 @@ void znajdzDroge(vertexStruct** vertexArray, int* distance, bool* visited, int* 
 		}
 		droga->next = nullptr;
 		while (poczatek->next != nullptr) {
-			cout << poczatek->value << " ";
+			cout << "[" << poczatek->value %MAPA_SZER<<";"<< (poczatek->value -(poczatek->value%MAPA_SZER))/MAPA_SZER << "]" << " ";
 			poczatek = poczatek->next;
 		}
 	}
@@ -287,6 +291,8 @@ int main()
 	queueStruct* kolejka = new queueStruct;
 	kolejka->front = nullptr;
 	kolejka->rear = nullptr;
+	int dystans[MAPA_SZER * MAPA_WYS]; 
+	int rodzic[MAPA_SZER * MAPA_WYS];
 
 	xStart = rand() % MAPA_SZER;
 	yEnd = rand() % MAPA_WYS;
@@ -301,8 +307,8 @@ int main()
 	}
 
 
-	int* distance = new int[liczbaWierzcholkow];
-	int* parent = new int[liczbaWierzcholkow];
+	//int* distance = new int[liczbaWierzcholkow];
+	//int* parent = new int[liczbaWierzcholkow];
 	//while (true) {
 	//	int x, y;
 	//	std::cin >> x >> y;
@@ -326,6 +332,7 @@ int main()
 	wypiszListeSasiadow(xStart, yStart, vertexArray);
 	cout << endl;
 	wypiszListeSasiadow(xEnd, yEnd, vertexArray);
+	cout << endl;
 
 
 	/*enqueue(kolejka, vertexArray[yStart * MAPA_SZER + xStart]);
@@ -336,12 +343,12 @@ int main()
 	//for (int i = 0; i < MAPA_SZER * MAPA_WYS; i++) {
 	//	cout << visited[i];
 	//}
-	for (int y = 0; y < MAPA_WYS; y++) {
+	/*for (int y = 0; y < MAPA_WYS; y++) {
 		for (int x = 0; x < MAPA_SZER; x++) {
 			wypiszListeSasiadow(x, y, vertexArray);
 			cout << endl;
 		}
-	}
+	}*/
 
 
 	//hbfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd, distance, parent);
@@ -349,7 +356,7 @@ int main()
 	//cout << parent[yEnd * MAPA_SZER + xEnd];
 	//znajdzDroge(vertexArray, distance, visited, parent, xStart, yStart, xEnd, yEnd);
 
-	cout << bfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd);
-
+	bfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd, dystans, rodzic);
+	znajdzDroge(vertexArray, dystans, visited, rodzic, xStart, yStart, xEnd, yEnd);
 }
 
