@@ -150,7 +150,7 @@ void hbfs(vertexStruct** vertexArray, queueStruct* queue, bool* visited, int lic
 	distance[yStart * MAPA_SZER + xStart] = 0;
 	parent[yStart * MAPA_SZER + xStart] = -1;
 	while (!isEmpty(queue)) {
-		p = vertexArray[queue->front->value]; 
+		p = vertexArray[queue->front->next->value]; 
 		dequeue(queue);
 		//if (visited[yEnd*MAPA_SZER+xEnd]) return distance[yEnd * MAPA_SZER + xEnd];
 		while (p->next != nullptr) {
@@ -377,10 +377,10 @@ int main()
 	}
 	
 	
-	//hbfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd, distance, parent);
+	hbfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd, distance, parent);
 	//cout << " kontrola";
 	//cout << parent[yEnd * MAPA_SZER + xEnd];
-	//znajdzDroge(vertexArray, distance, visited, parent, xStart, yStart, xEnd, yEnd);
+	znajdzDroge(vertexArray, distance, visited, parent, xStart, yStart, xEnd, yEnd);
 	
 	//cout << bfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd);
 
