@@ -88,7 +88,7 @@ void wypiszListeSasiadow(int x, int y, vertexStruct** vertexArray) {
 
 		while (p->next != nullptr) {
 			//cout << "[" << p->value % MAPA_SZER << "," << (p->value - ((p->value) % MAPA_SZER))/MAPA_WYS<< "] ";
-			cout << "[" << p->value % MAPA_SZER << ";" << (p->value - (p->value % MAPA_SZER)) / MAPA_SZER << "] ";
+			cout << "[" << p->next->value % MAPA_SZER << ";" << (p->next->value - (p->next->value % MAPA_SZER)) / MAPA_SZER << "] ";
 			p = p->next;
 		}
 	}
@@ -227,59 +227,92 @@ int main()
 	printMapa(mapa);
 	cout << endl;
 
-	vertexStruct* p;
-	vertexStruct** vertexArray = new vertexStruct * [liczbaWierzcholkow];
+	vertexStruct** vertexArray = new vertexStruct * [MAPA_WYS*MAPA_SZER];
 	bool visited[MAPA_SZER * MAPA_WYS];
 	for (int i = 0; i < MAPA_WYS * MAPA_SZER; i++) {
 		visited[i] = false;
 	}
 
-	p = new vertexStruct;
+	//p = new vertexStruct;
 
+			vertexStruct* front = nullptr; 
+			vertexStruct* rear = nullptr;
 	for (int i = 0; i < MAPA_WYS; i++) {
 		for (int j = 0; j < MAPA_SZER; j++) {
+			front = nullptr;
+			rear = nullptr;
 
 			if (mapa[i][j] == 0) {
 				vertexArray[i * MAPA_SZER + j] = nullptr;
 				continue;
 			}
-			p = new vertexStruct;
-			vertexArray[i * MAPA_SZER + j] = p;
-			p->value = -1;
-			p->next = nullptr;
-			if (j > 0) { //sprawdz lewo 
-				if (mapa[i][j - 1] == 1) {
+			
+			if (j > 0&&(mapa[i][j - 1] == 1))  { //sprawdz lewo 
+					vertexStruct* p = new vertexStruct;
+					p->next = nullptr;
 					p->value = i * MAPA_SZER + j - 1;
-					p->next = new vertexStruct;
-					p = p->next;
-				}
+					if (front == nullptr) {
+						front = rear = p;
+					}
+					else {
+						rear->next = p;
+						rear = rear->next;
+					}
+					p = nullptr; 
+					delete p;
+				
 			}
-			if (i < MAPA_WYS - 1) { //sprawdz dol 
-				if (mapa[i + 1][j] == 1) {
-
+			if (i < MAPA_WYS - 1 && (mapa[i + 1][j] == 1)) { //sprawdz dol 
+					vertexStruct* p = new vertexStruct;
+					p->next = nullptr;
 					p->value = (i + 1) * MAPA_SZER + j;
-					p->next = new vertexStruct;
-					p = p->next;
-				}
+					if (front == nullptr) {
+						front = rear = p;
+					}
+					else {
+						rear->next = p;
+						rear = rear->next;
+					}
+					p = nullptr; 
+					delete p;
+					
 
 			}
-			if (j < MAPA_SZER - 1) {//sprawdz prawo 
-				if (mapa[i][j + 1] == 1) {
-
+			if (j < MAPA_SZER - 1 && (mapa[i][j + 1] == 1)) {//sprawdz prawo 
+					vertexStruct* p = new vertexStruct;
+					p->next = nullptr;
 					p->value = i * MAPA_SZER + j + 1;
-					p->next = new vertexStruct;
-					p = p->next;
-				}
+					if (front == nullptr) {
+						front = rear = p;
+					}
+					else {
+						rear->next = p;
+						rear = rear->next;
+					}
+					p = nullptr; 
+					delete p;
+					
+				
 			}
-			if (i > 0) { //sprawdz gore 
-				if (mapa[i - 1][j] == 1) {
-
+			if (i > 0 && (mapa[i - 1][j] == 1)) { //sprawdz gore 
+					vertexStruct* p = new vertexStruct; 
+					p->next = nullptr;
 					p->value = (i - 1) * MAPA_SZER + j;
-					p->next = new vertexStruct;
-					p = p->next;
-				}
+					if (front == nullptr) {
+						front = rear = p;
+					}
+					else {
+						rear->next = p;
+						rear = rear->next;
+					}
+					
+					
 			}
-			p->next = nullptr;
+			vertexArray[i * MAPA_SZER + j] = new vertexStruct;
+			vertexArray[i * MAPA_SZER + j]->next =front;
+
+			front = nullptr; 
+
 			
 		}
 	}
@@ -303,14 +336,14 @@ int main()
 
 	int* distance = new int[liczbaWierzcholkow];
 	int* parent = new int[liczbaWierzcholkow];
-	//while (true) {
-	//	int x, y;
-	//	std::cin >> x >> y;
-	//	wypiszListeSasiadow(x, y, p, vertexArray);
-	//	char stop = 'c';
-	//	cin >> stop;
-	//	if (stop == 'b') break;
-	//}
+	/*while (true) {
+		int x, y;
+		std::cin >> x >> y;
+		wypiszListeSasiadow(x, y, vertexArray);
+		char stop = 'c';
+		cin >> stop;
+		if (stop == 'b') break;
+	}*/
 	/*int x, y;
 	cin >> x >> y;
 	enqueue(kolejka, vertexArray[y * MAPA_SZER + x]);
