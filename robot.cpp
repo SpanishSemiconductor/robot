@@ -303,7 +303,7 @@ int main()
 		yEnd = rand() % MAPA_WYS;
 		yStart = rand() % MAPA_WYS;
 		xEnd = rand() % MAPA_SZER;
-		if (mapa[yStart][xStart] == 1 && mapa[yEnd][xEnd] == 1) break;
+		if (mapa[yStart][xStart] == 1 && mapa[yEnd][xEnd] == 1 && yStart!=yEnd && xStart!=xEnd) break;
 	}
 
 
@@ -328,12 +328,7 @@ int main()
 
 	cout << "Start: [" << xStart << ";" << yStart << "]" << endl;
 	cout << "Koniec: [" << xEnd << ";" << yEnd << "]" << endl;
-	cout << mapa[yStart][xStart] << endl;
-	wypiszListeSasiadow(xStart, yStart, vertexArray);
-	cout << endl;
-	wypiszListeSasiadow(xEnd, yEnd, vertexArray);
-	cout << endl;
-
+	
 
 	/*enqueue(kolejka, vertexArray[yStart * MAPA_SZER + xStart]);
 	enqueue(kolejka, vertexArray[yEnd * MAPA_SZER + xEnd]);
@@ -356,7 +351,7 @@ int main()
 	//cout << parent[yEnd * MAPA_SZER + xEnd];
 	//znajdzDroge(vertexArray, distance, visited, parent, xStart, yStart, xEnd, yEnd);
 
-	bfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xStart, yStart, xEnd, yEnd, dystans, rodzic);
-	znajdzDroge(vertexArray, dystans, visited, rodzic, xStart, yStart, xEnd, yEnd);
+	bfs(vertexArray, kolejka, visited, liczbaWierzcholkow, xEnd, yEnd, xStart, yStart, dystans, rodzic);
+	znajdzDroge(vertexArray, dystans, visited, rodzic, xEnd, yEnd, xStart, yStart);
 }
 
